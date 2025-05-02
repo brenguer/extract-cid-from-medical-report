@@ -1,26 +1,30 @@
-This Jupyter Notebook automates the extraction and validation of **ICD-10 codes (CIDs)** from medical reports (PCD laudos) stored in URLs within a Google Sheet. It leverages **Google Workspace tools (Colab, Sheets, Drive)** and the **Gemini API** to process documents, validate data, and update results in real time. Below is a breakdown of its core functionalities:
+This Jupyter automates the extraction and validation of **ICD-10 codes (CIDs)** from medical reports (*PCD laudos*) stored in URLs within a Google Sheet. Developed for **internal use at a Brazilian company** to scale validation of medical reports, it leverages **Google Workspace tools (Colab, Sheets, Drive)** and the **Gemini API** to process documents, validate data, and update results in real time. Below is a breakdown of its core functionalities:
+
 
 ## **Key Features**
-1. **Google Workspace Integration**  
-   - Authenticates with Google Sheets and Drive APIs.  
-   - Reads input data from a specified Google Sheet (`gemini2` worksheet).  
-   - Updates processed results back to the same sheet automatically.  
+1. 1. **Portuguese-Language Implementation**  
+   - Code, prompts, and validations are primarily in Portuguese (e.g., `cid_candidato`, `validação_cruzada`).  
+   - Custom Gemini prompts tailored to Brazilian medical documentation (e.g., `CID-10`, `laudo digitado/mão`).  
 
-2. **ICD Code Extraction with Gemini**  
+2. **Scalable Validation Workflow**  
+   - Designed to process hundreds of reports daily, replacing manual checks with AI-driven automation.  
+   - Cross-checks user-inputted CIDs against Gemini-extracted codes to flag discrepancies.  
+
+3. **ICD Code Extraction with Gemini**  
    - Processes URLs pointing to medical documents (PDFs, JPEGs, etc.).  
    - Uses the **Gemini 1.5 Flash model** to:  
      - Extract ICD codes (e.g., `F84`, `F32.1`) from unstructured text.  
      - Identify report metadata (date, physician CRM, report type: *digitado*/*mão*).  
    - Handles OCR errors and fallback regex extraction if Gemini parsing fails.  
 
-3. **Validation & Cross-Checking**  
+4. **Validation & Cross-Checking**  
    - Validates extracted ICDs against:  
      - A predefined list of PCD-eligible ICDs (from the `cid_data` worksheet).  
      - User-inputted ICDs (`cid_candidato` column).  
    - Flags mismatches and invalid codes.  
    - Adds descriptions for ICDs using a reference CID dictionary.  
 
-4. **Automated Workflow**  
+5. **Automated Workflow**  
    - Downloads and processes files via `googleapiclient` and `httpx`.  
    - Implements rate limiting (5-7s delays) to avoid API throttling.  
    - Logs errors and skips invalid URLs gracefully.  
